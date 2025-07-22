@@ -29,3 +29,25 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+
+<!-- 在文件列表区域添加刷新按钮 -->
+<div id="file-list-container">
+    <div class="list-header">
+        <h2>文件列表 <button onclick="loadFileList()">🔄 刷新</button></h2>
+        <p>最后更新: <span id="last-updated"></span></p>
+    </div>
+    <div id="file-list"></div>
+</div>
+
+<style>
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    #last-updated {
+        color: #666;
+        font-size: 0.9em;
+    }
+</style>

@@ -1,3 +1,4 @@
+/*
 // 配置区 - 需要修改为您的仓库
 const CONFIG = {
     REPO: "wujianson/dir",
@@ -118,4 +119,58 @@ function renderFileList(files, mirror) {
     });
     
     fileListEl.innerHTML = html || "<p>暂无文件</p>";
+}
+*/
+// 配置适配您的仓库结构
+const CONFIG = {
+    REPO: "wujianson/dir",
+    MIRRORS: {
+        bgithub: "https://bgithub.xyz/wujianson/dir/raw/main/",
+        ghproxy: "https://ghproxy.com/https://github.com/wujianson/dir/raw/main/"
+    },
+    EXCLUDE: [  // 需要排除的文件
+        "README.md", 
+        "LICENSE", 
+        ".gitignore", 
+        "file-list.json"
+    ]
+};
+
+// 文件加载逻辑
+async function loadFileList(mirror = 'bgithub') {
+    try {
+        const response = await fetch(`${CONFIG.MIRRORS[mirror]}file-list.json?t=${Date.now()}`);
+        const files = (await response.json())
+            .filter(file => !CONFIG.EXCLUDE.includes(file.name));
+        
+        renderFileList(files, mirror);
+    } catch (error) {
+        console.error("加载失败:", error);
+        // 回退方案：尝试直接列出文件
+        await loadFallbackList(mirror);
+    }
+}
+
+// 备用加载方案
+async function loadFallbackList(mirror) {
+    try {
+        // 通过GitHub API获取原始文件列表
+        const apiRes = await fetch(`https://api.github.com/repos/${CONFIG.REPO}/contents`);
+        const files = (await apiRes.json())
+            .filter(item => item.type === "file")
+            .filter(file => !CONFIG.EXCLUDE.includes(file.name));
+        
+        renderFileList(files.map(f => ({
+            name: f.name,
+            size: f.size,
+            path: f.path
+        })), mirror);
+    } catch (error) {
+        document.getElementById('file-list').innerHTML = `
+            <div class="error">
+                <p>⚠️ 无法加载文件列表</p>
+                <p>错误详情: ${error.message}</p>
+            </div>
+        `;
+    }
 }
