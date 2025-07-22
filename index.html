@@ -1,11 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=client.html">
-    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>relace 文件共享</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <p>Redirecting to download portal... <a href="client.html">Go now</a></p>
+    <div class="app-container">
+        <!-- 模式切换区 -->
+        <div class="mode-switcher">
+            <button class="active" id="guest-btn">游客模式</button>
+            <button id="admin-btn">管理员模式</button>
+        </div>
+
+        <!-- 管理员认证区 -->
+        <div id="admin-auth" class="hidden">
+            <input type="password" id="api-key" placeholder="输入API密钥">
+            <button onclick="verifyKey()">验证</button>
+            <span id="auth-status"></span>
+        </div>
+
+        <!-- 文件上传区 -->
+        <div id="upload-area" class="hidden">
+            <input type="file" id="file-input" multiple>
+            <button onclick="startUpload()">上传文件</button>
+            <div id="upload-progress"></div>
+        </div>
+
+        <!-- 文件列表区 -->
+        <div class="file-list-container">
+            <h2>可用文件 <span id="last-updated"></span></h2>
+            <div id="file-list">
+                <p>加载文件列表中...</p>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>存储状态: <span id="storage-status">连接中...</span></p>
+            <p>镜像源: 
+                <span class="mirror-option active" data-mirror="github">GitHub</span> | 
+                <span class="mirror-option" data-mirror="bgithub">BGitHub</span>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
